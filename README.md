@@ -1,2 +1,3 @@
 # moma-preprocess-module
-Module files for setting up moma preprocessing using Lmod
+
+This repository contains module files for using moma preprocessing with the [Environment Modules](https://modules.readthedocs.io/en/latest/index.html).
