@@ -5,17 +5,19 @@ This script sets up the preprocessing container and its supporting scripts.
 It will use Singularity containers, when Singularity is present. It will try to use Docker otherwise.
 '
 
-VERSION=$1
-ALLOWED_VERSIONS=("v0.2.0")
+# ALLOWED_VERSIONS=("v0.2.0")
 
-if [[ ! " ${ALLOWED_VERSIONS[*]} " =~ " ${VERSION} " ]];
-then
-  printf "ERROR: Invalid version: %s" "${VERSION}"
-  exit 1
-fi
+# if [[ ! " ${ALLOWED_VERSIONS[*]} " =~ " ${VERSION} " ]];
+# then
+#   printf "ERROR: Invalid version: %s" "${VERSION}"
+#   exit 1
+# fi
 
 function get_moma_bin_directory() {
-  echo "$HOME/.moma/$VERSION"
+  if [[ -z "${MOMA_BIN_DIRECTORY}" ]]; then
+    MOMA_BIN_DIRECTORY="$HOME/.moma/$VERSION"
+  fi
+  echo "${MOMA_BIN_DIRECTORY}" 
 }
 
 function get_image_basename() {
@@ -38,18 +40,17 @@ function get_image_tag() {
 function setup_docker() {
   HOST_SCRIPT_DIR="/host_scripts"
   docker_image_name=$(get_image_tag)
-  MOMA_BIN_DIRECTORY=$(get_moma_bin_directory)
-  mkdir -p "${MOMA_BIN_DIRECTORY}"
-  echo "docker name: ${docker_image_name}"
+  echo "docker_image_name: ${docker_image_name}"
+  mkdir -p "$(get_moma_bin_directory)"
+  # echo "docker name: ${docker_image_name}"
   docker pull "${docker_image_name}"
   id=$(docker create "${docker_image_name}")
-  docker cp "${id}":"${HOST_SCRIPT_DIR}"/mm_dispatch_preprocessing.sh "${MOMA_BIN_DIRECTORY}"
-  docker cp "${id}":"${HOST_SCRIPT_DIR}"/moma_preprocess "${MOMA_BIN_DIRECTORY}"
+  docker cp "${id}":"${HOST_SCRIPT_DIR}"/mm_dispatch_preprocessing.sh "$(get_moma_bin_directory)"
+  docker cp "${id}":"${HOST_SCRIPT_DIR}"/moma_preprocess "$(get_moma_bin_directory)"
 }
 
 function setup_singularity() {
     MOMA_SINGULARITY_CONTAINER_DIR="$HOME/.moma/singularity_images"
-#    echo "${MOMA_SINGULARITY_CONTAINER_DIR}"
     echo "$(get_singularity_container_name)"
     SINGULARITY_CONTAINER_PATH="${MOMA_SINGULARITY_CONTAINER_DIR}/$(get_singularity_container_name)"
     echo "${SINGULARITY_CONTAINER_PATH}"
@@ -72,3 +73,5 @@ function main(){
 }
 
 main
+MOMA_BIN_DIRECTORY=$(get_moma_bin_directory)
+$MOMA_BIN_DIRECTORY/moma_preprocess "$@"
