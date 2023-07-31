@@ -11,7 +11,8 @@ export VERSION="v0.2.0"
 
 DIR_OF_CURRENT_SCRIPT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-source ../bin/functions.sh
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+source "${DIR}/functions.sh"
 
 ### Set target directory, where to store host-scripts that are copied from the container and container-image for Singularity
 MOMA_BIN_DIRECTORY="${DIR_OF_CURRENT_SCRIPT}"
@@ -29,8 +30,12 @@ id=$(docker create "${docker_image_name}")
 
 ### Copy support scripts from container to host
 HOST_SCRIPT_DIR="/host_scripts"
-docker cp "${id}":"${HOST_SCRIPT_DIR}"/mm_dispatch_preprocessing.sh "$(get_moma_bin_directory)"
-docker cp "${id}":"${HOST_SCRIPT_DIR}"/moma_preprocess "$(get_moma_bin_directory)/_container_moma_preprocess.sh"
+if [[ ! -f "$(get_moma_bin_directory)/mm_dispatch_preprocessing.sh" ]]; then
+docker cp "${id}":"${HOST_SCRIPT_DIR}/mm_dispatch_preprocessing.sh" "$(get_moma_bin_directory)/mm_dispatch_preprocessing.sh"
+fi
+if [[ ! -f "$(get_moma_bin_directory)/_container_moma_preprocess.sh" ]]; then
+docker cp "${id}":"${HOST_SCRIPT_DIR}/moma_preprocess" "$(get_moma_bin_directory)/_container_moma_preprocess.sh"
+fi
 
-### Star
+### Start preprocessing with wrapper script
 eval "${MOMA_BIN_DIRECTORY}/_container_moma_preprocess.sh" "$@"

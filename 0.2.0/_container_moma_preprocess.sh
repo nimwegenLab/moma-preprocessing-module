@@ -8,7 +8,7 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 #source "${DIR}/helpers.sh"
-source ./functions.sh
+source "${DIR}/functions.sh"
 
 docker_image_name=$(get_image_tag)
 
@@ -46,14 +46,11 @@ do
   case "$1" in
     -i )
       input_path=$(get_directory_path "$2")
-#      error_on_nonexistent_file "${2}"
       CMD_ARGUMENTS="${CMD_ARGUMENTS} $1 $2"
       shift 2
       ;;
     -o )
       output_path=$(get_directory_path "$2")
-#      error_on_existent_dir "${2}"
-      mkdir -p "${2}"
       CMD_ARGUMENTS="${CMD_ARGUMENTS} $1 $2"
       shift 2
       ;;
@@ -64,7 +61,6 @@ do
       ;;
     --gl_detection_template_path )
       gl_detection_template_path=$(get_directory_path "$2")
-#      error_on_nonexistent_file "${2}"
       CMD_ARGUMENTS="${CMD_ARGUMENTS} $1 $2"
       shift 2
       ;;
@@ -79,7 +75,7 @@ do
   esac
 done
 
-echo "starting docker image"
+echo "running container"
 
 # Use docker if it available
 if command -v docker &> /dev/null

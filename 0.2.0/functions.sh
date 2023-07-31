@@ -15,6 +15,30 @@ set -u
 #   exit 1
 # fi
 
+function error_on_existent_dir() {
+  if [[ -d "$1" ]]
+then
+    echo "ERROR: aborting to not overwrite, because directory exists: $1"
+    exit 1
+  fi
+}
+
+function error_on_nonexistent_dir() {
+  if [[ ! -d "$1" ]]
+then
+    echo "ERROR: aborting because directory does not exist: $1"
+    exit 1
+  fi
+}
+
+function error_on_nonexistent_file() {
+  if [[ ! -f "$1" ]]
+then
+    echo "ERROR: aborting because file does not exist: $1"
+    exit 1
+  fi
+}
+
 function get_moma_bin_directory() {
   echo "${MOMA_BIN_DIRECTORY}"
 }
