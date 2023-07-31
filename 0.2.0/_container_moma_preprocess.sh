@@ -34,7 +34,7 @@ function get_directory_path {
       return 0
     else
       # an invalid value was passed
-      echo "ERROR in get_directory_path: The path that was passed is neither a file or directory: ${TARGET_PATH}"
+      echo "ERROR: Path does not exist: ${TARGET_PATH}"
       exit 1
     fi
 }
@@ -76,6 +76,15 @@ do
 done
 
 echo "running container"
+#echo "SINGULARITY_CONTAINER_DIR: ${SINGULARITY_CONTAINER_DIR}"
+#SINGULARITY_CONTAINER_NAME="${CONTAINER_NAME//\//_}"
+#echo "SINGULARITY_CONTAINER_NAME: ${SINGULARITY_CONTAINER_NAME}"
+#SINGULARITY_CONTAINER_FILENAME="${CONTAINER_NAME//\//_}_${VERSION}.sif"
+#echo "SINGULARITY_CONTAINER_FILENAME: ${SINGULARITY_CONTAINER_FILENAME}"
+#SINGULARITY_CONTAINER_PATH="${SINGULARITY_CONTAINER_DIR}/${SINGULARITY_CONTAINER_FILENAME}"
+#echo "SINGULARITY_CONTAINER_PATH: ${SINGULARITY_CONTAINER_PATH}"
+#
+#echo "EXITING"; exit 1
 
 # Use docker if it available
 if command -v docker &> /dev/null
@@ -84,15 +93,26 @@ then
     docker run --rm --mount type=bind,src="${input_path}",target="${input_path}" --mount type=bind,src="${gl_detection_template_path}",target="${gl_detection_template_path}" --mount type=bind,src="${output_path}",target="${output_path}" --mount type=bind,src="${log_path}",target="${log_path}" "${docker_image_name}" "${CMD_ARGUMENTS}"
 elif command -v singularity &> /dev/null
 then
-    echo "Running preprocessing using Singularity container."
-    SINGULARITY_CONTAINER_DIR="$HOME/singularity_images"
-    echo "${SINGULARITY_CONTAINER_DIR}"
-    echo "$(get_singularity_container_name)"
-    SINGULARITY_CONTAINER_PATH="${SINGULARITY_CONTAINER_DIR}/$(get_singularity_container_name)"
-    echo "${SINGULARITY_CONTAINER_PATH}"
+#    echo "Running preprocessing using Singularity container."
+#    SINGULARITY_CONTAINER_DIR="$HOME/singularity_images"
+#    echo "${SINGULARITY_CONTAINER_DIR}"
+#    echo "$(get_singularity_container_name)"
+##    SINGULARITY_CONTAINER_PATH="${SINGULARITY_CONTAINER_DIR}/$(get_singularity_container_name)"
+#    SINGULARITY_CONTAINER_FILENAME="${CONTAINER_NAME}_${VERSION}.sif"
+#    SINGULARITY_CONTAINER_PATH="${SINGULARITY_CONTAINER_DIR}/${SINGULARITY_CONTAINER_FILENAME}"
+
+#    echo "SINGULARITY_CONTAINER_DIR: ${SINGULARITY_CONTAINER_DIR}"
+    SINGULARITY_CONTAINER_NAME="${CONTAINER_NAME//\//_}"
+#    echo "SINGULARITY_CONTAINER_NAME: ${SINGULARITY_CONTAINER_NAME}"
+    SINGULARITY_CONTAINER_FILENAME="${CONTAINER_NAME//\//_}_${VERSION}.sif"
+#    echo "SINGULARITY_CONTAINER_FILENAME: ${SINGULARITY_CONTAINER_FILENAME}"
+    SINGULARITY_CONTAINER_FILE_PATH="${SINGULARITY_CONTAINER_DIR}/${SINGULARITY_CONTAINER_FILENAME}"
+#    echo "SINGULARITY_CONTAINER_PATH: ${SINGULARITY_CONTAINER_PATH}"
+
+#    echo "${SINGULARITY_CONTAINER_PATH}"
     mkdir "${SINGULARITY_CONTAINER_DIR}"
 
-    singularity pull --dir="${SINGULARITY_CONTAINER_DIR}" "docker://${docker_image_name}"
-    singularity run --bind "${input_path}":"${input_path}" --bind "${gl_detection_template_path}":"${gl_detection_template_path}" --bind "${output_path}":"${output_path}" --bind "${log_path}":"${log_path}" "${SINGULARITY_CONTAINER_PATH}" "${CMD_ARGUMENTS}"
+    singularity pull "${SINGULARITY_CONTAINER_FILE_PATH}" "docker://${docker_image_name}"
+    singularity run --bind "${input_path}":"${input_path}" --bind "${gl_detection_template_path}":"${gl_detection_template_path}" --bind "${output_path}":"${output_path}" --bind "${log_path}":"${log_path}" "${SINGULARITY_CONTAINER_FILE_PATH}" "${CMD_ARGUMENTS}"
 #docker run --rm --mount type=bind,src="${input_path}",target="${input_path}" --mount type=bind,src="${gl_detection_template_path}",target="${gl_detection_template_path}" --mount type=bind,src="${output_path}",target="${output_path}" --mount type=bind,src="${log_path}",target="${log_path}" "${docker_image_name}" "${CMD_ARGUMENTS}"
 fi
