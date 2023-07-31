@@ -13,7 +13,7 @@ MOMA_BIN_DIRECTORY="${DIR}"
 export VERSION="v0.2.0"
 export CONTAINER_NAME="michaelmell/mmpreprocesspy"
 export CONTAINER_TAG="${CONTAINER_NAME}:${VERSION}"
-export SINGULARITY_CONTAINER_DIR="${DIR}"
+export SINGULARITY_CONTAINER_DIR="${MOMA_BIN_DIRECTORY}"
 
 
 ### TODO: Check if an image with this tag already exists; if it does do not pull new one; this will avoid having to run the lengthy hash calculation
