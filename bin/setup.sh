@@ -13,13 +13,6 @@ It will use Singularity containers, when Singularity is present. It will try to 
 #   exit 1
 # fi
 
-function get_moma_bin_directory() {
-  if [[ -z "${MOMA_BIN_DIRECTORY}" ]]; then
-    MOMA_BIN_DIRECTORY="$HOME/.moma/$VERSION"
-  fi
-  echo "${MOMA_BIN_DIRECTORY}" 
-}
-
 function get_image_basename() {
   echo "michaelmell/mmpreprocesspy"
 }
@@ -45,8 +38,9 @@ function setup_docker() {
   # echo "docker name: ${docker_image_name}"
   docker pull "${docker_image_name}"
   id=$(docker create "${docker_image_name}")
+  # copy support script from container to host
   docker cp "${id}":"${HOST_SCRIPT_DIR}"/mm_dispatch_preprocessing.sh "$(get_moma_bin_directory)"
-  docker cp "${id}":"${HOST_SCRIPT_DIR}"/moma_preprocess "$(get_moma_bin_directory)"
+  docker cp "${id}":"${HOST_SCRIPT_DIR}"/moma_preprocess "$(get_moma_bin_directory)/moma_preprocess_wrapper.sh"
 }
 
 function setup_singularity() {
@@ -73,5 +67,5 @@ function main(){
 }
 
 main
-MOMA_BIN_DIRECTORY=$(get_moma_bin_directory)
-$MOMA_BIN_DIRECTORY/moma_preprocess "$@"
+#MOMA_BIN_DIRECTORY=$(get_moma_bin_directory)
+#$MOMA_BIN_DIRECTORY/moma_preprocess "$@"
