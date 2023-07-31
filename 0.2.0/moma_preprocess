@@ -33,9 +33,9 @@ HOST_SCRIPT_DIR="/host_scripts"
 if [[ ! -f "${MOMA_BIN_DIRECTORY}/mm_dispatch_preprocessing.sh" ]]; then
   docker cp "${id}":"${HOST_SCRIPT_DIR}/mm_dispatch_preprocessing.sh" "${MOMA_BIN_DIRECTORY}/mm_dispatch_preprocessing.sh"
 fi
-if [[ ! -f "${MOMA_BIN_DIRECTORY}/_container_moma_preprocess.sh" ]]; then
-  docker cp "${id}":"${HOST_SCRIPT_DIR}/moma_preprocess" "${MOMA_BIN_DIRECTORY}/_container_moma_preprocess.sh"
+if [[ ! -f "${MOMA_BIN_DIRECTORY}/moma_preprocess.sh" ]]; then
+  docker cp "${id}":"${HOST_SCRIPT_DIR}/moma_preprocess" "${MOMA_BIN_DIRECTORY}/moma_preprocess.sh"
 fi
 
 ### Start preprocessing with wrapper script
-eval "${MOMA_BIN_DIRECTORY}/_container_moma_preprocess.sh" "$@"
+eval "${MOMA_BIN_DIRECTORY}/moma_preprocess.sh" "$@"
