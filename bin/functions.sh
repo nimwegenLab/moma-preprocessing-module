@@ -66,6 +66,6 @@ function main(){
   fi
 }
 
-main
+#main
 #MOMA_BIN_DIRECTORY=$(get_moma_bin_directory)
 #$MOMA_BIN_DIRECTORY/moma_preprocess "$@"
