@@ -2,7 +2,8 @@
 
 ###
 # This script parses the command options for the preprocessing and calls the docker container for running the
-# containerized preprocessing instance.
+# containerized preprocessing instance. It support Docker and Singularity container engines. Singularity engine will be
+# preferred, if available.
 ###
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
@@ -117,4 +118,9 @@ then
     fi
     singularity run --bind "${input_path}":"${input_path}" --bind "${gl_detection_template_path}":"${gl_detection_template_path}" --bind "${output_path}":"${output_path}" --bind "${log_path}":"${log_path}" "${SINGULARITY_CONTAINER_FILE_PATH}" "${CMD_ARGUMENTS}"
 #docker run --rm --mount type=bind,src="${input_path}",target="${input_path}" --mount type=bind,src="${gl_detection_template_path}",target="${gl_detection_template_path}" --mount type=bind,src="${output_path}",target="${output_path}" --mount type=bind,src="${log_path}",target="${log_path}" "${CONTAINER_TAG}" "${CMD_ARGUMENTS}"
+else
+    printf "ERROR: No container engine was found. Check that Singularity or Docker are correctly configured."
+    exit 1
 fi
+
+exit 0
