@@ -10,8 +10,6 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 #source "${DIR}/helpers.sh"
 source "${DIR}/functions.sh"
 
-docker_image_name=$(get_image_tag)
-
 SHORT=i:,o:,p:,r:
 LONG=tmax:,roi_boundary_offset_at_mother_cell:,gl_detection_template_path:,normalization_config_path:,normalization_region_offset:,frames_to_ignore:,image_registration_method:,forced_intensity_normalization_range:,log:
 
@@ -89,8 +87,8 @@ echo "running container"
 # Use docker if it available
 if command -v docker &> /dev/null
 then
-    docker pull "${docker_image_name}"
-    docker run --rm --mount type=bind,src="${input_path}",target="${input_path}" --mount type=bind,src="${gl_detection_template_path}",target="${gl_detection_template_path}" --mount type=bind,src="${output_path}",target="${output_path}" --mount type=bind,src="${log_path}",target="${log_path}" "${docker_image_name}" "${CMD_ARGUMENTS}"
+    docker pull "${CONTAINER_TAG}"
+    docker run --rm --mount type=bind,src="${input_path}",target="${input_path}" --mount type=bind,src="${gl_detection_template_path}",target="${gl_detection_template_path}" --mount type=bind,src="${output_path}",target="${output_path}" --mount type=bind,src="${log_path}",target="${log_path}" "${CONTAINER_TAG}" "${CMD_ARGUMENTS}"
 elif command -v singularity &> /dev/null
 then
 #    echo "Running preprocessing using Singularity container."
@@ -115,8 +113,8 @@ then
     fi
 
     if [[ ! -f "${SINGULARITY_CONTAINER_FILE_PATH}" ]]; then
-      singularity pull "${SINGULARITY_CONTAINER_FILE_PATH}" "docker://${docker_image_name}"
+      singularity pull "${SINGULARITY_CONTAINER_FILE_PATH}" "docker://${CONTAINER_TAG}"
     fi
     singularity run --bind "${input_path}":"${input_path}" --bind "${gl_detection_template_path}":"${gl_detection_template_path}" --bind "${output_path}":"${output_path}" --bind "${log_path}":"${log_path}" "${SINGULARITY_CONTAINER_FILE_PATH}" "${CMD_ARGUMENTS}"
-#docker run --rm --mount type=bind,src="${input_path}",target="${input_path}" --mount type=bind,src="${gl_detection_template_path}",target="${gl_detection_template_path}" --mount type=bind,src="${output_path}",target="${output_path}" --mount type=bind,src="${log_path}",target="${log_path}" "${docker_image_name}" "${CMD_ARGUMENTS}"
+#docker run --rm --mount type=bind,src="${input_path}",target="${input_path}" --mount type=bind,src="${gl_detection_template_path}",target="${gl_detection_template_path}" --mount type=bind,src="${output_path}",target="${output_path}" --mount type=bind,src="${log_path}",target="${log_path}" "${CONTAINER_TAG}" "${CMD_ARGUMENTS}"
 fi
