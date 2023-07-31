@@ -1,5 +1,5 @@
 
-set -u
+#set -u
 
 setup_docker_container() {
   export VERSION="v0.2.0"
