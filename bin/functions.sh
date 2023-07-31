@@ -13,6 +13,10 @@ It will use Singularity containers, when Singularity is present. It will try to 
 #   exit 1
 # fi
 
+function get_moma_bin_directory() {
+  echo "${MOMA_BIN_DIRECTORY}"
+}
+
 function get_image_basename() {
   echo "michaelmell/mmpreprocesspy"
 }
