@@ -1,6 +1,4 @@
 
-set -u
-
 setup_docker_container() {
   export VERSION="v0.2.0"
   export CONTAINER_NAME="michaelmell/mmpreprocesspy"
