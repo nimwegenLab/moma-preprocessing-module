@@ -5,7 +5,7 @@ This script sets up the preprocessing container and its supporting scripts.
 It will use Singularity containers, when Singularity is present. It will try to use Docker otherwise.
 '
 
-cp ./moma_preprocess moma_preprocess__BKP
+set -u
 
 export VERSION="v0.2.0"
 
@@ -30,7 +30,7 @@ id=$(docker create "${docker_image_name}")
 ### Copy support scripts from container to host
 HOST_SCRIPT_DIR="/host_scripts"
 docker cp "${id}":"${HOST_SCRIPT_DIR}"/mm_dispatch_preprocessing.sh "$(get_moma_bin_directory)"
-docker cp "${id}":"${HOST_SCRIPT_DIR}"/moma_preprocess "$(get_moma_bin_directory)/moma_preprocess_wrapper.sh"
+docker cp "${id}":"${HOST_SCRIPT_DIR}"/moma_preprocess "$(get_moma_bin_directory)/_container_moma_preprocess.sh"
 
 ### Star
-eval "${MOMA_BIN_DIRECTORY}/moma_preprocess" "$@"
+eval "${MOMA_BIN_DIRECTORY}/_container_moma_preprocess.sh" "$@"

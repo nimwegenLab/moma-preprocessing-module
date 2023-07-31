@@ -5,6 +5,8 @@ This script sets up the preprocessing container and its supporting scripts.
 It will use Singularity containers, when Singularity is present. It will try to use Docker otherwise.
 '
 
+set -u
+
 # ALLOWED_VERSIONS=("v0.2.0")
 
 # if [[ ! " ${ALLOWED_VERSIONS[*]} " =~ " ${VERSION} " ]];
