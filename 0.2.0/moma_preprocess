@@ -8,33 +8,26 @@ It will use Singularity containers, when Singularity is present. It will try to 
 set -u
 
 export VERSION="v0.2.0"
-
-DIR_OF_CURRENT_SCRIPT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+export CONTAINER_NAME="michaelmell/mmpreprocesspy"
+export CONTAINER_TAG="${CONTAINER_NAME}:${VERSION}"
+export SINGULARITY_CONTAINER_DIR="$HOME/singularity_images"
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-source "${DIR}/functions.sh"
-
-### Set target directory, where to store host-scripts that are copied from the container and container-image for Singularity
-MOMA_BIN_DIRECTORY="${DIR_OF_CURRENT_SCRIPT}"
-#echo "MOMA_BIN_DIRECTORY: ${MOMA_BIN_DIRECTORY}"
-
-
-### Pull container image and create container
-docker_image_name=$(get_image_tag)
+MOMA_BIN_DIRECTORY="${DIR}"
 
 ### TODO: Check if an image with this tag already exists; if it does do not pull new one; this will avoid having to run the lengthy hash calculation
 ### michaelmell/mmpreprocesspy:v0.2.0
 
-docker pull "${docker_image_name}"
-id=$(docker create "${docker_image_name}")
+docker pull "${CONTAINER_TAG}"
+id=$(docker create "${CONTAINER_TAG}")
 
 ### Copy support scripts from container to host
 HOST_SCRIPT_DIR="/host_scripts"
-if [[ ! -f "$(get_moma_bin_directory)/mm_dispatch_preprocessing.sh" ]]; then
-docker cp "${id}":"${HOST_SCRIPT_DIR}/mm_dispatch_preprocessing.sh" "$(get_moma_bin_directory)/mm_dispatch_preprocessing.sh"
+if [[ ! -f "${MOMA_BIN_DIRECTORY}/mm_dispatch_preprocessing.sh" ]]; then
+  docker cp "${id}":"${HOST_SCRIPT_DIR}/mm_dispatch_preprocessing.sh" "${MOMA_BIN_DIRECTORY}/mm_dispatch_preprocessing.sh"
 fi
-if [[ ! -f "$(get_moma_bin_directory)/_container_moma_preprocess.sh" ]]; then
-docker cp "${id}":"${HOST_SCRIPT_DIR}/moma_preprocess" "$(get_moma_bin_directory)/_container_moma_preprocess.sh"
+if [[ ! -f "${MOMA_BIN_DIRECTORY}/_container_moma_preprocess.sh" ]]; then
+  docker cp "${id}":"${HOST_SCRIPT_DIR}/moma_preprocess" "${MOMA_BIN_DIRECTORY}/_container_moma_preprocess.sh"
 fi
 
 ### Start preprocessing with wrapper script
