@@ -110,9 +110,13 @@ then
 #    echo "SINGULARITY_CONTAINER_PATH: ${SINGULARITY_CONTAINER_PATH}"
 
 #    echo "${SINGULARITY_CONTAINER_PATH}"
-    mkdir "${SINGULARITY_CONTAINER_DIR}"
+    if [[ ! -d ${SINGULARITY_CONTAINER_DIR} ]]; then
+      mkdir "${SINGULARITY_CONTAINER_DIR}"
+    fi
 
-    singularity pull "${SINGULARITY_CONTAINER_FILE_PATH}" "docker://${docker_image_name}"
+    if [[ ! -f "${SINGULARITY_CONTAINER_FILE_PATH}" ]]; then
+      singularity pull "${SINGULARITY_CONTAINER_FILE_PATH}" "docker://${docker_image_name}"
+    fi
     singularity run --bind "${input_path}":"${input_path}" --bind "${gl_detection_template_path}":"${gl_detection_template_path}" --bind "${output_path}":"${output_path}" --bind "${log_path}":"${log_path}" "${SINGULARITY_CONTAINER_FILE_PATH}" "${CMD_ARGUMENTS}"
 #docker run --rm --mount type=bind,src="${input_path}",target="${input_path}" --mount type=bind,src="${gl_detection_template_path}",target="${gl_detection_template_path}" --mount type=bind,src="${output_path}",target="${output_path}" --mount type=bind,src="${log_path}",target="${log_path}" "${docker_image_name}" "${CMD_ARGUMENTS}"
 fi

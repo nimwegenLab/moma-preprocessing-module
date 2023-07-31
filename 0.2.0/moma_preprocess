@@ -7,13 +7,14 @@ It will use Singularity containers, when Singularity is present. It will try to 
 
 set -u
 
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+MOMA_BIN_DIRECTORY="${DIR}"
+
 export VERSION="v0.2.0"
 export CONTAINER_NAME="michaelmell/mmpreprocesspy"
 export CONTAINER_TAG="${CONTAINER_NAME}:${VERSION}"
-export SINGULARITY_CONTAINER_DIR="$HOME/singularity_images"
+export SINGULARITY_CONTAINER_DIR="${DIR}"
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-MOMA_BIN_DIRECTORY="${DIR}"
 
 ### TODO: Check if an image with this tag already exists; if it does do not pull new one; this will avoid having to run the lengthy hash calculation
 ### michaelmell/mmpreprocesspy:v0.2.0
