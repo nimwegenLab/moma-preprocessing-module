@@ -1,5 +1,5 @@
 
-setup_docker_container() {
+setup_module() {
   export VERSION="v0.2.0"
   export CONTAINER_NAME="michaelmell/mmpreprocesspy"
   export CONTAINER_TAG="${CONTAINER_NAME}:${VERSION}"

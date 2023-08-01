@@ -7,9 +7,9 @@
 #set -u
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-source "${DIR}/setup_docker_container.sh"
+source "${DIR}/setup_module.sh"
 
-setup_docker_container
+setup_module
 
 ### Start preprocessing with wrapper script
 #eval "${MOMA_BIN_DIRECTORY}/moma_preprocess.sh" "$@"
