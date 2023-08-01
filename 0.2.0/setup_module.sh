@@ -2,7 +2,7 @@ setup_docker_container() {
   ### TODO: Check if an image with this tag already exists; if it does do not pull new one; this will avoid having to run the lengthy hash calculation
   ### michaelmell/mmpreprocesspy:v0.2.0
 
-  printf "Setting up module with Singularity container."
+  printf "Setting up module with Singularity container.\n"
 
   docker pull "${CONTAINER_TAG}"
   id=$(docker create "${CONTAINER_TAG}")
@@ -18,7 +18,7 @@ setup_docker_container() {
 }
 
 function setup_singularity_container() {
-    printf "Setting up module with Singularity container."
+    printf "Setting up module with Singularity container.\n"
     SINGULARITY_CONTAINER_NAME="${CONTAINER_NAME//\//_}"
 #    echo "SINGULARITY_CONTAINER_NAME: ${SINGULARITY_CONTAINER_NAME}"
     SINGULARITY_CONTAINER_FILENAME="${CONTAINER_NAME//\//_}_${VERSION}.sif"
@@ -29,11 +29,12 @@ function setup_singularity_container() {
       singularity pull "${SINGULARITY_CONTAINER_FILE_PATH}" "docker://${CONTAINER_TAG}"
     fi
 
+    HOST_SCRIPT_DIR="/host_scripts"
     if [[ ! -f "${MOMA_BIN_DIRECTORY}/mm_dispatch_preprocessing.sh" ]]; then
-      singularity  exec "${SINGULARITY_CONTAINER_FILE_PATH}" cp "${HOST_SCRIPT_DIR}/mm_dispatch_preprocessing.sh" .
+      singularity  exec --bind "${SINGULARITY_CONTAINER_DIR}":"${SINGULARITY_CONTAINER_DIR}" "${SINGULARITY_CONTAINER_FILE_PATH}" cp "${HOST_SCRIPT_DIR}/mm_dispatch_preprocessing.sh" "${SINGULARITY_CONTAINER_DIR}/mm_dispatch_preprocessing.sh"
     fi
     if [[ ! -f "${MOMA_BIN_DIRECTORY}/moma_preprocess.sh" ]]; then
-      singularity  exec "${SINGULARITY_CONTAINER_FILE_PATH}" cp "${HOST_SCRIPT_DIR}/moma_preprocess.sh" .
+      singularity  exec --bind "${SINGULARITY_CONTAINER_DIR}":"${SINGULARITY_CONTAINER_DIR}" "${SINGULARITY_CONTAINER_FILE_PATH}" cp "${HOST_SCRIPT_DIR}/moma_preprocess" "${SINGULARITY_CONTAINER_DIR}/moma_preprocess.sh"
     fi
 }
 
