@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+: '
+This script sets up the preprocessing container and its supporting scripts.
+It will use Singularity containers, when Singularity is present. It will try to use Docker otherwise.
+'
+
+set -u
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+source "${DIR}/setup_module.sh"
+
+setup_module
+
+### Start preprocessing with wrapper script
+eval "${MOMA_BIN_DIRECTORY}/moma_preprocess" "$@"
