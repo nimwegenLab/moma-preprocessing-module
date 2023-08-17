@@ -13,4 +13,4 @@ source "${DIR}/setup_module.sh"
 setup_module
 
 ### Start preprocessing with wrapper script
-eval "${MOMA_BIN_DIRECTORY}/moma_preprocess.sh" "$@"
+eval "${MOMA_BIN_DIRECTORY}/moma_preprocess" "$@"
