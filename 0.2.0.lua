@@ -7,11 +7,11 @@ Preprocessing tool for the Mother-machine analayzer (MoMA).
 
 More information
 ================
- - Homepage: https://github.com/michaelmell/mmpreprocesspy 
+ - Homepage: https://github.com/nimwegenlab/moma-preprocessing-module
 ]==])
 
 whatis([==[Description: preprocessing tool for the Mother-machine analayzer (MoMA)]==])
-whatis([==[Homepage: https://github.com/michaelmell/mmpreprocesspy]==])
+whatis([==[Homepage: https://github.com/nimwegenlab/moma-preprocessing-module]==])
 
 conflict("moma-preprocess")
 

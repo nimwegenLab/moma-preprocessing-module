@@ -1,6 +1,6 @@
-# moma-preprocessing
+# MoMA preprocessing module
 
-This repository contains module files for using moma preprocessing with the [Environment Modules](https://modules.readthedocs.io/en/latest/index.html).
+This repository contains module files for using MoMA preprocessing with the [Environment Modules](https://modules.readthedocs.io/en/latest/index.html).
 
 ## Requirements
 
