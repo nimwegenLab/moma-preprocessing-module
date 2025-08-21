@@ -1,6 +1,7 @@
 # MoMA preprocessing module
 
-This repository contains module files for using MoMA preprocessing with the [Environment Modules](https://modules.readthedocs.io/en/latest/index.html).
+This repository contains files for running a containerized version of [MoMA preprocessing](https://github.com/nimwegenLab/moma-preprocessing).
+It allows you to run this preprocessing with minimal setup effort. Furthermore, contains module files for using MoMA preprocessing with [Environment Modules](https://modules.readthedocs.io/en/latest/index.html).
 
 ## Requirements
 
